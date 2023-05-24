@@ -19,7 +19,7 @@ import java.io.*;
 import java.sql.*;
 
 public class HelloApplication extends Application {
-    double balance = 10000;
+    double balance = 0;
 
 
 
@@ -234,26 +234,33 @@ public class HelloApplication extends Application {
                     fiveBtn.setOnAction(event -> {
                         textField.setText("Successefully Deposited 5$");
                         balance += 5;
+                        balanceLabel.setText("Balance: $" + String.valueOf(balance));
                         stage.setScene(scene);
                     });
                     tenBtn.setOnAction(event -> {
                         textField.setText("Successefully Deposited 10$");
                         balance += 10;
+                        balanceLabel.setText(String.valueOf(balance+10));
                         stage.setScene(scene);
                     });
                     twentyBtn.setOnAction(event -> {
                         textField.setText("Successefully Deposited 20$");
                         balance += 20;
+                        balanceLabel.setText("Balance: $" + String.valueOf(balance));
                         stage.setScene(scene);
                     });
                     fiftyBtn.setOnAction(event -> {
                         textField.setText("Successefully Deposited 50$");
                         balance += 50;
+                        balanceLabel.setText
+                                ("Balance: $" + String.valueOf(balance));
                         stage.setScene(scene);
                     });
                     hundredBtn.setOnAction(event -> {
                         textField.setText("Successefully Deposited 100$");
                         balance += 100;
+                        balanceLabel.setText("Balance: $" + String.valueOf(balance));
+
                         stage.setScene(scene);
                     });
                     customBtn.setOnAction(event -> {
@@ -261,9 +268,11 @@ public class HelloApplication extends Application {
                         textField.setText("Enter the custom deposit amount:");
                         StringBuilder customAmountResult = enteredDigits;
 
-
-                        textField.setText("Custom Deposit Amount: " + customAmountResult);
-                        balance += Double.parseDouble(customAmountResult.toString());
+                        okBtn.setOnAction(k -> {
+                            textField.setText("Custom Deposit Amount: " + customAmountResult);
+                            balance += Double.parseDouble(customAmountResult.toString());
+                            balanceLabel.setText("Balance: $" + String.valueOf(balance));
+                        });
                     });
 
 
@@ -304,6 +313,7 @@ public class HelloApplication extends Application {
                fiveBtn.setOnAction(event -> {
                    if (5 <= balance) {
                        balance -= 5;
+                       balanceLabel.setText("Balance: $" + String.valueOf(balance));
                        textField.setText("Successfully Withdrawn $" + 5);
                    } else {
                        textField.setText("Insufficient balance for withdrawal");
@@ -313,6 +323,7 @@ public class HelloApplication extends Application {
                tenBtn.setOnAction(event -> {
                    if (10 <= balance) {
                        balance -= 10;
+                       balanceLabel.setText("Balance: $" + String.valueOf(balance));
                        textField.setText("Successfully Withdrawn $" + 10);
                    } else {
                        textField.setText("Insufficient balance for withdrawal");
@@ -322,6 +333,7 @@ public class HelloApplication extends Application {
                twentyBtn.setOnAction(event -> {
                    if (20 <= balance) {
                        balance -= 20;
+                       balanceLabel.setText("Balance: $" + String.valueOf(balance));
                        textField.setText("Successfully Withdrawn $" + 20);
                    } else {
                        textField.setText("Insufficient balance for withdrawal");
@@ -331,6 +343,7 @@ public class HelloApplication extends Application {
                fiftyBtn.setOnAction(event -> {
                    if (50 <= balance) {
                        balance -= 50;
+                       balanceLabel.setText("Balance: $" + String.valueOf(balance));
                        textField.setText("Successfully Withdrawn $" + 50);
                    } else {
                        textField.setText("Insufficient balance for withdrawal");
@@ -340,6 +353,7 @@ public class HelloApplication extends Application {
                hundredBtn.setOnAction(event -> {
                    if (100 <= balance) {
                        balance -= 100;
+                       balanceLabel.setText("Balance: $" + String.valueOf(balance));
                        textField.setText("Successfully Withdrawn $" + 100);
                    } else {
                        textField.setText("Insufficient balance for withdrawal");
@@ -350,12 +364,15 @@ public class HelloApplication extends Application {
                    stage.setScene(scene);
                    textField.setText("Enter the custom withdrawn amount:");
                    StringBuilder customAmountResult = enteredDigits;
-                   if (Double.parseDouble(customAmountResult.toString()) <= balance) {
-                       balance -= Double.parseDouble(customAmountResult.toString());
-                       textField.setText("Successfully Withdrawn $" + Double.parseDouble(customAmountResult.toString()));
-                   } else {
-                       textField.setText("Insufficient balance for withdrawal");
-                   }
+                   okBtn.setOnAction(x -> {
+                       if (Double.parseDouble(customAmountResult.toString()) <= balance) {
+                           balance -= Double.parseDouble(customAmountResult.toString());
+                           balanceLabel.setText("Balance: $" + String.valueOf(balance));
+                           textField.setText("Successfully Withdrawn $" + Double.parseDouble(customAmountResult.toString()));
+                       } else {
+                           textField.setText("Insufficient balance for withdrawal");
+                       }
+                   });
 
                });
 
@@ -383,12 +400,11 @@ public class HelloApplication extends Application {
             }
             try {
                 Connection con = DriverManager.getConnection(url, username, password);
-                PreparedStatement preparedStatement = con.prepareStatement("insert into PROFILE.ACCOUNT (CARDNUMBER, CVV, EXPDATE, PINCODE, BALANCE) values(?, ?, ?, ?, ?)");
+                PreparedStatement preparedStatement = con.prepareStatement("insert into PROFILE.ACCOUNT (CARDNUMBER, CVV, EXPDATE, PINCODE) values(?, ?, ?, ?)");
                 preparedStatement.setString(1, cardNumber);
                 preparedStatement.setString(2, cvv);
                 preparedStatement.setString(3,expdate);
                 preparedStatement.setString(4, pinCode);
-                preparedStatement.setDouble(5, balance);
                 preparedStatement.executeUpdate();
 
             } catch (SQLException ex) {
